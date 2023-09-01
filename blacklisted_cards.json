@@ -1,0 +1,14 @@
+{
+    "blacklisted_card_numbers": [
+        "17005971",
+        "2343",
+        "56",
+        "17942571"
+    ],
+    "blacklisted_card_owners": [
+        "17005971",
+        "2343",
+        "poo",
+        "STUPID"
+    ]
+}

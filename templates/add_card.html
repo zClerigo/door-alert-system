@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <title>RFID Alerts</title>
+</head>
+<style type="text/css">
+    body { background: #212121 !important; }
+    .carousel-control-next, .carousel-control-prev {
+        filter: invert(100%);
+    }
+</style>
+<body>
+    <div class="container">
+        <div class="p-3 mb-2 text-white">
+            <div class="row">
+                <div class="col-12">
+                    <div class="mx-auto">
+                        <div class="jumbotron jumbotron-fluid">
+                            <div class="d-flex justify-content-center">
+                                <h1 class="display-3">Add / Remove Blacklisted Cards</h1><br>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="card-numbers">Card Number:</label>
+                <input type="text" class="form-control" id="card-numbers"><br>
+                <label for="card-owner">Card Owner:</label>
+                <input type="text" class="form-control" id="card-owner"> <br>
+                <button id="add-button" class="btn btn-primary">Add Card</button>
+                <button id="remove-button" class="btn btn-danger">Remove Card</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        //i hate high level programming
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const addButton = document.getElementById('add-button');
+            const removeButton = document.getElementById('remove-button');
+            
+            addButton.addEventListener('click', function() {
+                const cardNumbersInput = document.getElementById('card-numbers');
+                const cardOwnerInput = document.getElementById('card-owner');
+                const cardNumber = cardNumbersInput.value.trim();
+                const cardOwner = cardOwnerInput.value.trim();
+                
+
+                if (cardNumber) {
+                    const formData = new FormData();
+                    formData.append('card_number', cardNumber);
+                    formData.append('card_owner', cardOwner);
+                    
+                    fetch('/add_blacklisted_card', {
+                        method: 'POST',
+                        body: formData
+                    })
+                    .then(response => response.text())
+                    .then(message => {
+                        alert(message);
+                        location.reload();
+                    })
+                    
+                    .catch(error => {
+                        console.error('Error:', error);
+                    });
+                } else {
+                    alert('Please enter a card number.');
+                }
+
+            });
+            
+            removeButton.addEventListener('click', function() {
+                const cardNumbersInput = document.getElementById('card-numbers');
+                const cardOwnerInput = document.getElementById('card-owner');
+                const cardNumber = cardNumbersInput.value.trim();
+                const cardOwner = cardOwnerInput.value.trim();
+
+                if (cardNumber) {
+                    const data = { card_number: cardNumber, card_owner: cardOwner };
+
+                    fetch('/remove_blacklisted_card', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json' 
+                        },
+                        body: JSON.stringify(data) 
+                    })
+                    .then(response => response.text())
+                    .then(message => {
+                        alert(message);
+                        location.reload();
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                    });
+                } else {
+                    alert('Please enter a card number.');
+                }
+            });
+        });
+    </script><br><br>
+    <div class = "row justify-content-center">
+    <div class="col-8">
+    <table class="table table-dark">
+        <thead>
+            <tr>
+                <th scope="col">Card Owner</th>
+                <th scope="col">Card Number</th>
+            </tr>
+        </thead>
+    </table>
+</div>
+</div>
+    <script>
+        function populateTable(arr1, arr2) {
+
+var table = document.querySelector('table');
+var rowCount = Math.max(arr1.length, arr2.length);
+
+for (var i = 0; i < rowCount; i++) {
+    var row = table.insertRow(-1);
+
+    var cell1 = row.insertCell(0);
+    var cell2 = row.insertCell(1);
+
+    if (i < arr1.length) {
+        cell1.textContent = arr1[i];
+    }
+
+    if (i < arr2.length) {
+        cell2.textContent = arr2[i];
+    }
+}
+}
+        fetch("/get_blacklisted_cards")
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+                populateTable(data['blacklisted_card_owners'], data['blacklisted_card_numbers']);
+            })
+            .catch(error => console.error("Error fetching blacklisted cards:", error));
+            
+
+    </script>
+
+</body>
+</html>
