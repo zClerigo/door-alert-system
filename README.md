@@ -1,9 +1,12 @@
 # door-alert-system
 An alert system that detects if patients with a certain RFID band are trying to leave the assisted living facility I worked at.
+The system also shows what card was swiped in and where.
 
 I made this system alongside @Zidanni
 
 This web app works alongside the DXAccess door management software.
+
+The UI is kind of bad but it works.
 
 ![1](https://github.com/nodiuus/door-alert-system/assets/85966719/5591c865-e4cd-42f7-aa07-f3f515348953)
 
